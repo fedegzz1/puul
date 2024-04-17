@@ -21,6 +21,16 @@ export class UserController {
   findOne(@Param('email') email: string) {
     return this.userService.findOne(email);
   }
+  
+  @Get('/numTask/:userId')
+  findTasks(@Param('userId') userId: number){
+    return this.userService.findTasks(userId);
+  }
+
+  @Get('/costTask/:userId')
+  findCost(@Param('userId') userId: number){
+    return this.userService.findCost(userId);
+  }
 
   /* @Patch(':id')
   update(@Param('id') id: string, @Body() updateUserDto: UpdateUserDto) {
