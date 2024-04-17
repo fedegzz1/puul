@@ -25,8 +25,8 @@ export class Task {
     @Column({ type: 'decimal', precision: 100, scale: 2 })
     cost : number;
 
-    @ManyToMany(() => User, (user) => user.tasks)
+    /* @ManyToMany(() => User, (user) => user.tasks)
     @JoinTable()
-    users: User[];
+    users?: User[]; */
 
 }

@@ -26,12 +26,13 @@ export class TaskService {
     task.dueDate = createTaskDto.dueDate;
 
   
-    const users = await this.userRepository.createQueryBuilder('user')
+    /* const users = await this.userRepository.createQueryBuilder('user')
       .where('user.id IN (:...ids)', { ids: createTaskDto.users })
       .getMany();
 
 
-      task.users = users;
+      task.users = users; */
+      
     return this.taskRepository.save(task);
   }
 

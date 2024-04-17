@@ -19,7 +19,7 @@ export class User {
   @Column({ type: 'varchar', length: 15 })
   role: string;
 
-  @ManyToMany(() => Task, (task) => task.users)
-    tasks: Task[]
+  /* @ManyToMany(() => Task, (task) => task.users)
+    tasks?: Task[] */
 
 }
