@@ -4,7 +4,7 @@ import { DeleteResult, Repository, UpdateResult } from 'typeorm';
 import { CreateTaskDto } from './dto/create-task.dto';
 import { UpdateTaskDto } from './dto/update-task.dto';
 import { Task } from './entities/task.entity';
-import {User} from '../user/entities/User.entity';
+import {User} from '../user/entities/user.entity';
 
 @Injectable()
 export class TaskService {
@@ -12,26 +12,26 @@ export class TaskService {
   constructor(
     @InjectRepository(Task) 
     private readonly taskRepository: Repository<Task>,
-    /* @InjectRepository(User) 
-    private readonly userRepository: Repository<User> */
+    @InjectRepository(User) 
+    private readonly userRepository: Repository<User>
 
   ) {}
 
-  create(createTaskDto: CreateTaskDto) {
+  async create(createTaskDto: CreateTaskDto) {
     const task: Task = new Task();
     task.name = createTaskDto.name;
     task.description = createTaskDto.description;
     task.hours = createTaskDto.hours;
     task.status = createTaskDto.status;
     task.dueDate = createTaskDto.dueDate;
+    task.cost = createTaskDto.cost;
 
   
-    /* const users = await this.userRepository.createQueryBuilder('user')
+    const users = await this.userRepository.createQueryBuilder('user')
       .where('user.id IN (:...ids)', { ids: createTaskDto.users })
       .getMany();
 
-
-      task.users = users; */
+    task.users = users;
 
     return this.taskRepository.save(task);
   }

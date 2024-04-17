@@ -32,7 +32,7 @@ export class CreateTaskDto {
     dueDate: Date;
 
     @IsDecimal()
-    cost:number;
+    cost: number;
 
     @IsInt({ each: true })
     users: number[];
