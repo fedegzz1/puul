@@ -29,4 +29,21 @@ export class Task {
     @JoinTable()
     users?: User[]; */
 
+    @ManyToMany(
+        () => User, 
+        user => user.tasks, //optional
+        {onDelete: 'NO ACTION', onUpdate: 'NO ACTION'})
+        @JoinTable({
+          name: 'task_user',
+          joinColumn: {
+            name: 'task_id',
+            referencedColumnName: 'id',
+          },
+          inverseJoinColumn: {
+            name: 'user_id',
+            referencedColumnName: 'id',
+          },
+        })
+        users?: User[];
+
 }

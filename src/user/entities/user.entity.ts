@@ -22,4 +22,11 @@ export class User {
   /* @ManyToMany(() => Task, (task) => task.users)
     tasks?: Task[] */
 
+    @ManyToMany(
+      () => Task,
+      task => task.users,
+      {onDelete: 'NO ACTION', onUpdate: 'NO ACTION',},
+    )
+    tasks?: Task[];
+
 }

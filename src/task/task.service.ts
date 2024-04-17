@@ -12,12 +12,12 @@ export class TaskService {
   constructor(
     @InjectRepository(Task) 
     private readonly taskRepository: Repository<Task>,
-    @InjectRepository(User) 
-    private readonly userRepository: Repository<User>
+    /* @InjectRepository(User) 
+    private readonly userRepository: Repository<User> */
 
   ) {}
 
-  async create(createTaskDto: CreateTaskDto) {
+  create(createTaskDto: CreateTaskDto) {
     const task: Task = new Task();
     task.name = createTaskDto.name;
     task.description = createTaskDto.description;
@@ -32,7 +32,7 @@ export class TaskService {
 
 
       task.users = users; */
-      
+
     return this.taskRepository.save(task);
   }
 
