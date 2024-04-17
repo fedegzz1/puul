@@ -16,7 +16,7 @@ import { Task } from './task/entities/task.entity';
       password: 'password',
       username: 'postgres',
       entities: [User,Task],
-      database: 'pool2',
+      database: 'puul',
       synchronize: true,
       logging: true,
     }),

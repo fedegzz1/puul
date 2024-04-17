@@ -17,19 +17,19 @@ export class UserController {
     return this.userService.findAll();
   }
 
-  @Get(':email')
-  findOne(@Param('email') email: string) {
-    return this.userService.findOne(email);
+  @Get(':name')
+  findOne(@Param('name') name: string) {
+    return this.userService.findOne(name);
   }
   
-  @Get('/numTask/:userId')
-  findTasks(@Param('userId') userId: number){
-    return this.userService.findTasks(userId);
+  @Get('/numTask/:name')
+  findTasks(@Param('name') name: string){
+    return this.userService.findTasks(name);
   }
 
-  @Get('/costTask/:userId')
-  findCost(@Param('userId') userId: number){
-    return this.userService.findCost(userId);
+  @Get('/costTask/:name')
+  findCost(@Param('name') name: string){
+    return this.userService.findCost(name);
   }
 
   /* @Patch(':id')

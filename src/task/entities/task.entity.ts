@@ -40,8 +40,8 @@ export class Task {
             referencedColumnName: 'id',
           },
           inverseJoinColumn: {
-            name: 'user_id',
-            referencedColumnName: 'id',
+            name: 'user_name',
+            referencedColumnName: 'name',
           },
         })
         users?: User[];

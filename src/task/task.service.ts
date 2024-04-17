@@ -28,7 +28,7 @@ export class TaskService {
 
   
     const users = await this.userRepository.createQueryBuilder('user')
-      .where('user.id IN (:...ids)', { ids: createTaskDto.users })
+      .where('user.name IN (:...names)', { names: createTaskDto.users })
       .getMany();
 
     task.users = users;
