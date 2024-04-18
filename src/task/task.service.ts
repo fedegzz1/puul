@@ -74,26 +74,36 @@ export class TaskService {
       queryBuilder.leftJoin('task.users', 'user');
     } 
 
-    // Conditionally add WHERE clause
+    // Conditionally add WHERE clause depending on which fields are populated
     if (FindTaskDto.name != null) {
       queryBuilder.where('task.name = :name', { name: FindTaskDto.name });
     }
 
 
-    if (FindTaskDto.userName !== null) {
+    if (FindTaskDto.userName != null) {
       queryBuilder.andWhere('user.name = :userName', { userName: FindTaskDto.userName });
     }
   
-    if (FindTaskDto.userEmail !== null) {
+    if (FindTaskDto.userEmail != null) {
       queryBuilder.andWhere('user.email = :userEmail', { userEmail: FindTaskDto.userEmail });
     }
-    /* if (FindTaskDto.userName != null) {
-      queryBuilder.andWhere('user.name = :userName', { userName: FindTaskDto.userName });
-     }
-    
-    if (FindTaskDto.userEmail != null) { 
-      queryBuilder.andWhere('user.email = :userEmail', { userEmail: FindTaskDto.userEmail });
-    } */
+
+    if (FindTaskDto.status != null){
+      queryBuilder.andWhere('task.status = :status', {status: FindTaskDto.status})
+    }
+
+    if (FindTaskDto.dueDate != null) {
+      queryBuilder.andWhere('DATE(task.dueDate) = :dueDate', { dueDate: FindTaskDto.dueDate });
+    }
+
+    if (FindTaskDto.sortDesc != null && FindTaskDto.sortDesc == true){
+      queryBuilder.addOrderBy('task.dueDate', "DESC")
+    }
+    else{
+      queryBuilder.addOrderBy('task.dueDate', "ASC")
+    }
+
+
 
     //get result
     const tasks = await queryBuilder.getMany();

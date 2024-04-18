@@ -1,5 +1,6 @@
 import {
     IsAlphanumeric,
+    IsBoolean,
     IsDate,
     IsDecimal,
     IsEmail,
@@ -28,5 +29,8 @@ export class FindTaskDto {
     @IsString()
     @IsEnum(['activa', 'terminada'], {message: 'Estatus invalido, debe de ser activa o terminada'})
     status: string;
+
+    @IsBoolean()
+    sortDesc: boolean;
 
 }
