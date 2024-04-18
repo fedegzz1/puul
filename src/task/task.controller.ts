@@ -2,6 +2,7 @@ import { Controller, Get, Post, Body, Patch, Param, Delete } from '@nestjs/commo
 import { TaskService } from './task.service';
 import { CreateTaskDto } from './dto/create-task.dto';
 import { UpdateTaskDto } from './dto/update-task.dto';
+import { FindTaskDto } from './dto/find-task.dto'
 
 @Controller('task')
 export class TaskController {
@@ -17,7 +18,9 @@ export class TaskController {
     return this.taskService.findAll();
   }
 
-  @Get(':name')
+  
+
+  @Get('/byname/:name')
   findOne(@Param('name') name: string) {
     return this.taskService.findOne(name);
   }
@@ -30,5 +33,10 @@ export class TaskController {
   @Delete(':id')
   remove(@Param('id') id: string) {
     return this.taskService.remove(+id);
+  }
+
+  @Get('/withFilters')
+  findByRequest(@Body() findtaskDto: FindTaskDto) {
+    return this.taskService.findByRequest(findtaskDto);
   }
 }
