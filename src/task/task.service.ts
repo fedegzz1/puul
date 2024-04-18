@@ -1,8 +1,9 @@
 import { Injectable , NotFoundException} from '@nestjs/common';
 import { InjectRepository} from '@nestjs/typeorm';
-import { DeleteResult, Repository, UpdateResult } from 'typeorm';
+import { DeleteResult, Repository, UpdateResult, In } from 'typeorm';
 import { CreateTaskDto } from './dto/create-task.dto';
 import { UpdateTaskDto } from './dto/update-task.dto';
+import { UpdateUsersDto } from './dto/update-users.dto';
 import { Task } from './entities/task.entity';
 import {User} from '../user/entities/user.entity';
 import { FindTaskDto } from './dto/find-task.dto';
@@ -45,26 +46,68 @@ export class TaskService {
     return this.taskRepository.findOneBy({name});
   }
 
-  update(id: number, updateTaskDto: UpdateTaskDto) {
-    return `This action updates a #${id} task`;
+  /* update(id: number, updateTaskDto: UpdateTaskDto) {
+    return this.taskRepository.update(id, updateTaskDto);
+  } */
+
+  /* async removeUser(id: number, updateUserDto: UpdateUsersDto ){
+    const task = await this.taskRepository.findOne({
+      where: {
+          id: id
+      }
+    });
+
+    if (!task) {
+      throw new NotFoundException('Task not found');
+    }
+
+    if (updateUserDto.users) {
+      // Fetch existing users
+      await this.taskRepository
+        .createQueryBuilder()
+        .relation(Task, 'users')
+        .of(id)
+        .loadMany(); // Load users relation
+
+      const existingUserIds = task.users.map(user => user.name);
+
+      // Determine users to remove
+      const userIdsToRemove = existingUserIds.filter(userId => !updateUserDto.users.includes(userId));
+
+      // Load User entities
+      const usersToRemoveEntities = await this.userRepository.findBy({ name: In([userIdsToRemove]) });
+
+      // Update many-to-many relationship
+      return await this.taskRepository
+        .createQueryBuilder()
+        .relation(Task, 'users')
+        .of(id)
+        .remove( usersToRemoveEntities);
+    }
+  } */
+
+  async removeUser(id: number, name: string): Promise<void> {
+    // Load the entities from the database
+    const task = await this.taskRepository.findOne({ where: { id }, relations: ['users'] });
+    const user = await this.userRepository.findOneBy({name});
+
+    // Check if entities exist
+    if (!task || !user) {
+      throw new Error('Entity not found');
+    }
+
+    // Remove the association
+    task.users = task.users.filter((eb) => eb.name !== user.name);
+
+    // Save the changes
+    await this.taskRepository.save(task);
   }
+
 
   remove(id: number): Promise<{ affected?: number }> {
     return this.taskRepository.delete(id);
   }
 
-  /* findByRequest( findtaskDto: FindTaskDto) :  Promise<Task[]>{
-    const queryBuilder = this.taskRepository.createQueryBuilder('task');
-    if (findtaskDto.userName == null || findtaskDto.userEmail == null){
-      queryBuilder.leftJoin('user.tasks', 'user')// join with User table if we want a filter related to the user
-    }
-    queryBuilder.select('*')
-     if(FindTaskDto.name ! == null){
-      queryBuilder.where('user.name = :name', { name: FindTaskDto.name });
-     }
-    
-    return queryBuilder;
-  } */
 
   async findByRequest(FindTaskDto: FindTaskDto): Promise<Task[]> {
     const queryBuilder = this.taskRepository.createQueryBuilder('task');

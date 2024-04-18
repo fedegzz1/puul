@@ -34,7 +34,7 @@ export class CreateTaskDto {
     @IsDecimal()
     cost: number;
 
-    @IsInt({ each: true })
-    users: number[];
+    @IsString({ each: true })
+    users: string[];
 
 }
