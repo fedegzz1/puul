@@ -81,12 +81,15 @@ export class TaskService {
     if (task == null|| user == null) {
       throw new NotFoundException('Entity not found');
     }
+    const queryBuilder = this.taskRepository.createQueryBuilder('task')
+    .leftJoin('task.users', 'user')
+    .where('task.name = :name', { name: name });
 
-    const isUserAssociated = task.users.some((taskUser) => taskUser.name === name);
+    /* const isUserAssociated = task.users.some(taskUser => taskUser.name === name);
 
     if (!isUserAssociated) {
         throw new NotFoundException('User is not associated with the task');
-    }
+    } */
 
     // Remove the association
     task.users = task.users.filter((eb) => eb.name !== user.name);
@@ -94,7 +97,7 @@ export class TaskService {
     // Save the changes
     await this.taskRepository.save(task);
 
-    return 'Deleted relation between task and user';
+    return 'Deleted relation between task and user if there was one';
   }
 
 
