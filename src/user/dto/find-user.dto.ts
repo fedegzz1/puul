@@ -4,6 +4,7 @@ import {
     IsEnum,
     IsInt,
     IsNotEmpty,
+    IsOptional,
     IsString,
     Matches,
     MinLength,
@@ -13,10 +14,13 @@ import {
   export class FindUserDto {
     @IsString()
     @MinLength(2, { message: 'Name must have atleast 2 characters.' })
+    @IsOptional()
     name: string;
 
-    @IsEmail(null, { message: 'Please provide valid Email.' })
+    @IsEmail()
+    @IsOptional()
     email: string;
   
+    @IsOptional()
     role: string;
   }

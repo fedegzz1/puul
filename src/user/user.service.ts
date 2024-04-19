@@ -49,7 +49,7 @@ export class UserService {
     return this.userRepository.findOneBy({name});
   }
 
-  async findTasks(name: string): Promise<number>{
+  /* async findTasks(name: string): Promise<number>{
 
     const taskCount  = await this.userRepository.createQueryBuilder('user')
         .leftJoin('user.tasks', 'task') // join with the Task entity
@@ -70,7 +70,7 @@ export class UserService {
         .getRawOne();
 
     return taskCostSum;
-}
+} */
 
  /*  updateUser(id: number, updateUserDto: UpdateUserDto): Promise<User> {
     const user: User = new User();
@@ -86,41 +86,10 @@ export class UserService {
     return this.userRepository.delete(id);
   }
 
-  /* async findByRequest(findUserDto: FindUserDto): Promise <User[]>{
-    const queryBuilder = this.userRepository.createQueryBuilder('user')
-    .leftJoinAndSelect('user.tasks', 'tasks')
-    .where('tasks.status = :status', { status: 'finished' });
-
-    if (findUserDto.name != null){
-      queryBuilder.andWhere('user.name = :name', {name: findUserDto.name});
-    }
-
-    if (findUserDto.email != null){
-      queryBuilder.andWhere('user.email =: email', {email: findUserDto.email});
-    }
-
-    if (findUserDto.role != null){
-      queryBuilder.andWhere('user.role = :role', {role: findUserDto.role});
-    }
-
-    queryBuilder.loadRelationCountAndMap('user.finishedTaskCount', 'user.tasks')
-      .addSelect('SUM(tasks.hours)', 'totalFinishedTaskHours') // Calculate sum of hours for completed tasks
-      .groupBy('user.id');
-
-    const users = await queryBuilder.getMany();
-
-    if (users.length === 0 ){
-      throw new NotFoundException('No users found.');
-    }
-
-    return users;
-  } */
 
   async findByRequest(findUserDto: FindUserDto): Promise<User[]> {
     const queryBuilder = this.userRepository.createQueryBuilder('user')
-      .leftJoin('user.tasks', 'tasks')
-      .leftJoin('task_user', 'tu', 'tu.task_id = tasks.id')
-      .where('tasks.status = :status', { status: 'finished' });
+      .where('1 = 1'); // Ensures that subsequent conditions are connected with 'AND' correctly
   
     if (findUserDto.name != null) {
       queryBuilder.andWhere('user.name = :name', { name: findUserDto.name });
@@ -135,11 +104,14 @@ export class UserService {
     }
   
     queryBuilder
+      .leftJoin('user.tasks', 'tasks')
+      .andWhere('(tasks.status = :status OR tasks.status IS NULL)', { status: 'finished' }) // Filtering tasks
+  
       .select('user.name', 'user_name')
       .addSelect('user.email', 'user_email')
       .addSelect('user.role', 'user_role')
-      .addSelect('COUNT(tasks.id)', 'totalFinishedTasksCount')
-      .addSelect('SUM(tasks.hours)', 'totalFinishedTaskHours')
+      .addSelect('COALESCE(COUNT(tasks.id), 0)', 'totalFinishedTasksCount')
+      .addSelect('COALESCE(SUM(tasks.hours), 0)', 'totalFinishedTaskHours')
       .groupBy('user.name');
   
     const users = await queryBuilder.getRawMany();

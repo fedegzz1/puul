@@ -1,0 +1,205 @@
+{
+	"info": {
+		"_postman_id": "92da4928-bd65-49a2-956a-0f3539a5f1d1",
+		"name": "pool",
+		"schema": "https://schema.getpostman.com/json/collection/v2.0.0/collection.json",
+		"_exporter_id": "34327540"
+	},
+	"item": [
+		{
+			"name": "User",
+			"item": [
+				{
+					"name": "Post User",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"name\": \"FedeGzz\",\r\n    \"email\": \"federico@gmail.com\",\r\n    \"role\" : \"admin\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": "localhost:3000/user/"
+					},
+					"response": []
+				},
+				{
+					"name": "Get Find all Users",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": "localhost:3000/user/"
+					},
+					"response": []
+				},
+				{
+					"name": "New Request",
+					"request": {
+						"method": "GET",
+						"header": []
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Task",
+			"item": [
+				{
+					"name": "Post Task Copy",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"name\": \"Expensive\",\r\n    \"description\": \"Task Change\",\r\n    \"hours\" : \"5\",\r\n    \"status\": \"activa\",\r\n    \"cost\": \"1000000.00\",\r\n    \"dueDate\": \"2024-04-17T15:30:00\",\r\n    \"users\":[\"Fede\"]\r\n}\r\n",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": "localhost:3000/task/"
+					},
+					"response": []
+				},
+				{
+					"name": "UpdateTask",
+					"request": {
+						"method": "PATCH",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"name\": \"Task0\",\r\n    \"description\": \"Task Updated\",\r\n    \"hours\" : 5,\r\n    \"status\": \"finished\",\r\n    \"cost\": \"10000.00\",\r\n    \"dueDate\": \"2024-04-17T12:30:00\",\r\n    \"users\":[\"ale\"]\r\n}\r\n",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": "localhost:3000/task/1"
+					},
+					"response": []
+				},
+				{
+					"name": "Get Task with Filters",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"name\": \"Task7\",\r\n    \"dueDate\": \"2024-04-17\",\r\n    \"userName\": \"Fede\",\r\n    \"userEmail\": \"fede@gmail.com\",\r\n    \"status\": \"finished\",\r\n    \"sortDesc\": false\r\n}\r\n",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": "localhost:3000/task/withFilters"
+					},
+					"response": []
+				},
+				{
+					"name": "Get Task with Filters Copy",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"name\": \"Task7\",\r\n    \"dueDate\": \"2024-04-17\",\r\n    \"userName\": \"Fede\",\r\n    \"userEmail\": \"fede@gmail.com\",\r\n    \"status\": \"finished\",\r\n    \"sortDesc\": false\r\n}\r\n",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": "localhost:3000/task/withFilters"
+					},
+					"response": []
+				},
+				{
+					"name": "Get Task",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": "localhost:3000/task"
+					},
+					"response": []
+				},
+				{
+					"name": "Get Task by Name",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": "localhost:3000/task/byName/Test1"
+					},
+					"response": []
+				},
+				{
+					"name": "removeUserRelation",
+					"request": {
+						"method": "PATCH",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": "localhost:3000/task/removeUser/3/Fede"
+					},
+					"response": []
+				},
+				{
+					"name": "remaining Hours",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": "localhost:3000/task/analytics/remainingHours"
+					},
+					"response": []
+				},
+				{
+					"name": "costToHourRatio",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": "localhost:3000/task/analytics/remainingHours"
+					},
+					"response": []
+				},
+				{
+					"name": "Delete Task",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": "localhost:3000/task/4"
+					},
+					"response": []
+				}
+			]
+		}
+	]
+}
