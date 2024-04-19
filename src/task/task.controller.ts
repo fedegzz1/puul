@@ -19,27 +19,27 @@ export class TaskController {
     return this.taskService.findAll();
   }
 
-  
-
   @Get('/byname/:name')
   findOne(@Param('name') name: string) {
     return this.taskService.findOne(name);
   }
 
- /* @Patch(':id')
+  
+
+ @Patch(':id')
   update(@Param('id') id: string, @Body() updateTaskDto: UpdateTaskDto) {
     return this.taskService.update(+id, updateTaskDto);
-  } */
+  }
 
   /* @Patch('/removeUser/:id')
   update(@Param('id') id: number, @Body() updateUsersDto: UpdateUsersDto) {
     return this.taskService.removeUser(id, updateUsersDto );
   } */
 
-  @Patch('/removeUser/:id/:userName')
+  /* @Patch('/removeUser/:id/:userName')
   update(@Param('id') id: number, userName: string) {
     return this.taskService.removeUser(id, userName );
-  }
+  } */
 
   @Delete(':id')
   remove(@Param('id') id: string) {
@@ -49,5 +49,15 @@ export class TaskController {
   @Get('/withFilters')
   findByRequest(@Body() findtaskDto: FindTaskDto) {
     return this.taskService.findByRequest(findtaskDto);
+  }
+
+  @Get('/analytics/remainingHours')
+  calculateRemainingHours(){
+    return this.taskService.calculateRemainingHours();
+  }
+
+  @Get('/analytics/costToHourRatio/:numResults')
+  findTop10TasksWithHighestCostToHoursRatio(@Param('numResults') numResults: number){
+    return this.taskService.findTop10TasksWithHighestCostToHoursRatio(numResults);
   }
 }

@@ -17,9 +17,10 @@ import {
     name: string;
 
     @IsNotEmpty()
-    @IsEmail(null, { message: 'Please provide valid Email.' })
+    @IsEmail()
     email: string;
   
     @IsNotEmpty()
+    @IsEnum(['admin', 'member'], {message: 'Invalid role, must be either "admin" or "member"'})
     role: string;
   }

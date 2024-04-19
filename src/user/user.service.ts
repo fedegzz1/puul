@@ -23,6 +23,18 @@ export class UserService {
     return this.userRepository.save(user);
   }
 
+  /* async update(name: string, updateUserDto: UpdateUserDto): Promise<User> {
+    const user = await this.userRepository.findOne({ where: { name } });
+    if (!user) {
+      throw new NotFoundException('User not found');
+    }
+
+    // Update user properties with the provided data
+    Object.assign(user, updateUserDto);
+
+    return this.userRepository.save(user); // Save the updated user
+  } */
+
   findAll(): Promise<User[]> {
     return this.userRepository.find();
   }

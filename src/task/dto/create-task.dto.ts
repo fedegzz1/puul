@@ -1,6 +1,6 @@
 import {
     IsAlphanumeric,
-    IsDate,
+    IsDateString,
     IsDecimal,
     IsEmail,
     IsEnum,
@@ -25,10 +25,10 @@ export class CreateTaskDto {
     hours: number;
 
     @IsString()
-    @IsEnum(['activa', 'terminada'], {message: 'Estatus invalido, debe de ser activa o terminada'})
+    @IsEnum(['active', 'finished'], {message: 'Invalid Status, must be either "active" or "finished"'})
     status: string;
 
-    @IsDate()
+    @IsDateString()
     dueDate: Date;
 
     @IsDecimal()

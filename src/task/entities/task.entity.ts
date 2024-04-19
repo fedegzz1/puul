@@ -32,7 +32,7 @@ export class Task {
     @ManyToMany(
         () => User, 
         user => user.tasks, //optional
-        {onDelete: 'NO ACTION', onUpdate: 'NO ACTION'})
+        {onDelete: 'CASCADE', onUpdate: 'CASCADE'})
         @JoinTable({
           name: 'task_user',
           joinColumn: {

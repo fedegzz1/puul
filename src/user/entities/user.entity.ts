@@ -22,7 +22,7 @@ export class User {
     @ManyToMany(
       () => Task,
       task => task.users,
-      {onDelete: 'NO ACTION', onUpdate: 'NO ACTION',},
+      {onDelete: 'CASCADE', onUpdate: 'CASCADE',},
     )
     tasks?: Task[];
 

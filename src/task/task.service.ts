@@ -38,6 +38,33 @@ export class TaskService {
     return this.taskRepository.save(task);
   }
 
+  async update(id: number, updateTaskDto: UpdateTaskDto): Promise<Task> {
+    const task = await this.taskRepository.findOne({ where: { id }, relations: ['users'] });
+    if (!task) {
+      throw new NotFoundException('Task not found');
+    }
+
+    const { users: userNames, ...taskData } = updateTaskDto;
+
+    if (userNames) {
+      // Find users by their names
+      const users = await Promise.all(userNames.map(userName =>
+        this.userRepository.findOne({ where: { name: userName } })
+      ));
+
+      if (users.some(user => !user)) {
+        throw new NotFoundException('One or more users not found');
+      }
+
+      task.users = users; // Update the users associated with the task
+    }
+
+    // Update the task data
+    Object.assign(task, taskData);
+
+    return this.taskRepository.save(task); // Save the updated task
+  }
+
   findAll(): Promise<Task[]> {
     return this.taskRepository.find();
   }
@@ -166,5 +193,33 @@ export class TaskService {
 
     //return all found Tasks
     return queryBuilder.getMany();
+  }
+
+  remainingHours(){
+    this.taskRepository.createQueryBuilder
+  }
+
+  async calculateRemainingHours(): Promise<number> {
+    // Using QueryBuilder to sum remaining hours of active tasks
+    const queryBuilder = this.taskRepository.createQueryBuilder('task');
+    const remainingHours = await queryBuilder
+      .select('SUM(task.hours)', 'totalRemainingHours')
+      .where('task.status = :status', { status: 'activa' })
+      .getRawOne();
+
+    return remainingHours.totalRemainingHours || 0;
+  }
+
+  async findTop10TasksWithHighestCostToHoursRatio(numResults: number): Promise<Task[]> {
+    const queryBuilder = this.taskRepository.createQueryBuilder('task');
+    const top10Tasks = await queryBuilder
+      .select('task')
+      .addSelect('task.cost / task.hours', 'costToHoursRatio')
+      .where('task.status = :status', { status: 'activa' })
+      .orderBy('task.cost / task.hours', 'DESC')
+      .take(numResults)
+      .getRawMany();
+
+    return top10Tasks;
   }
 }
