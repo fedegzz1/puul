@@ -86,14 +86,20 @@ export class TaskService {
     }
   } */
 
-  async removeUser(id: number, name: string): Promise<void> {
+  async removeUser(id: number, name: string): Promise<string> {
     // Load the entities from the database
     const task = await this.taskRepository.findOne({ where: { id }, relations: ['users'] });
-    const user = await this.userRepository.findOneBy({name});
+    const user = await this.userRepository.findOne({where: {name}});
 
     // Check if entities exist
-    if (!task || !user) {
-      throw new Error('Entity not found');
+    if (task == null|| user == null) {
+      throw new NotFoundException('Entity not found');
+    }
+
+    const isUserAssociated = task.users.some((taskUser) => taskUser.name === name);
+
+    if (!isUserAssociated) {
+        throw new NotFoundException('User is not associated with the task');
     }
 
     // Remove the association
@@ -101,6 +107,8 @@ export class TaskService {
 
     // Save the changes
     await this.taskRepository.save(task);
+
+    return 'Deleted relation between task and user';
   }
 
 
@@ -140,10 +148,10 @@ export class TaskService {
     }
 
     if (FindTaskDto.sortDesc != null && FindTaskDto.sortDesc == true){
-      queryBuilder.addOrderBy('task.dueDate', "DESC")
+      queryBuilder.addOrderBy('task.dueDate', "DESC");
     }
     else{
-      queryBuilder.addOrderBy('task.dueDate', "ASC")
+      queryBuilder.addOrderBy('task.dueDate', "ASC");
     }
 
 

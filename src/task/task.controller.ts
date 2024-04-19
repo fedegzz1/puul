@@ -3,7 +3,7 @@ import { TaskService } from './task.service';
 import { CreateTaskDto } from './dto/create-task.dto';
 import { UpdateTaskDto } from './dto/update-task.dto';
 import { UpdateUsersDto } from './dto/update-users.dto';
-import { FindTaskDto } from './dto/find-task.dto'
+import { FindTaskDto } from './dto/find-task.dto';
 
 @Controller('task')
 export class TaskController {

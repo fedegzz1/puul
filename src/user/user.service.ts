@@ -1,10 +1,11 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable , NotFoundException} from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository, UpdateResult } from 'typeorm';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
 import { User } from './entities/user.entity';
 import { Task } from '../task/entities/task.entity';
+import { FindUserDto } from './dto/find-user.dto';
 
 
 @Injectable()
@@ -65,5 +66,29 @@ export class UserService {
 
   remove(id: number): Promise<{ affected?: number }> {
     return this.userRepository.delete(id);
+  }
+
+  async findByRequest(findUserDto: FindUserDto): Promise <User[]>{
+    const queryBuilder = this.userRepository.createQueryBuilder('user');
+
+    if (findUserDto.name != null){
+      queryBuilder.where('user.name = :name', {name: findUserDto.name});
+    }
+
+    if (findUserDto.email != null){
+      queryBuilder.andWhere('user.email =: email', {email: findUserDto.email});
+    }
+
+    if (findUserDto.role != null){
+      queryBuilder.andWhere('user.role = :role', {role: findUserDto.role});
+    }
+
+    const users = await queryBuilder.getMany();
+
+    if (users.length === 0 ){
+      throw new NotFoundException('No users found.');
+    }
+
+    return queryBuilder.getMany();
   }
 }
