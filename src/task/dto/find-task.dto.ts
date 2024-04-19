@@ -1,7 +1,9 @@
 import {
     IsAlphanumeric,
+    IsISO8601,
     IsBoolean,
     IsDate,
+    IsDateString,
     IsDecimal,
     IsEmail,
     IsEnum,
@@ -17,7 +19,7 @@ export class FindTaskDto {
     @IsString()
     name: string;
 
-    @IsDate()
+    @IsISO8601()
     dueDate: Date;
 
     @IsString()
@@ -27,7 +29,7 @@ export class FindTaskDto {
     userEmail: string;
 
     @IsString()
-    @IsEnum(['activa', 'terminada'], {message: 'Estatus invalido, debe de ser activa o terminada'})
+    @IsEnum(['active', 'finished'], {message: 'Invalid Status, must be either "active" or "finished"'})
     status: string;
 
     @IsBoolean()
