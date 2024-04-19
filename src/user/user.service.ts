@@ -68,11 +68,13 @@ export class UserService {
     return this.userRepository.delete(id);
   }
 
-  async findByRequest(findUserDto: FindUserDto): Promise <User[]>{
-    const queryBuilder = this.userRepository.createQueryBuilder('user');
+  /* async findByRequest(findUserDto: FindUserDto): Promise <User[]>{
+    const queryBuilder = this.userRepository.createQueryBuilder('user')
+    .leftJoinAndSelect('user.tasks', 'tasks')
+    .where('tasks.status = :status', { status: 'finished' });
 
     if (findUserDto.name != null){
-      queryBuilder.where('user.name = :name', {name: findUserDto.name});
+      queryBuilder.andWhere('user.name = :name', {name: findUserDto.name});
     }
 
     if (findUserDto.email != null){
@@ -83,12 +85,51 @@ export class UserService {
       queryBuilder.andWhere('user.role = :role', {role: findUserDto.role});
     }
 
+    queryBuilder.loadRelationCountAndMap('user.finishedTaskCount', 'user.tasks')
+      .addSelect('SUM(tasks.hours)', 'totalFinishedTaskHours') // Calculate sum of hours for completed tasks
+      .groupBy('user.id');
+
     const users = await queryBuilder.getMany();
 
     if (users.length === 0 ){
       throw new NotFoundException('No users found.');
     }
 
-    return queryBuilder.getMany();
+    return users;
+  } */
+
+  async findByRequest(findUserDto: FindUserDto): Promise<User[]> {
+    const queryBuilder = this.userRepository.createQueryBuilder('user')
+      .leftJoin('user.tasks', 'tasks')
+      .leftJoin('task_user', 'tu', 'tu.task_id = tasks.id')
+      .where('tasks.status = :status', { status: 'finished' });
+  
+    if (findUserDto.name != null) {
+      queryBuilder.andWhere('user.name = :name', { name: findUserDto.name });
+    }
+  
+    if (findUserDto.email != null) {
+      queryBuilder.andWhere('user.email = :email', { email: findUserDto.email });
+    }
+  
+    if (findUserDto.role != null) {
+      queryBuilder.andWhere('user.role = :role', { role: findUserDto.role });
+    }
+  
+    queryBuilder
+      .select('user.name', 'user_name')
+      .addSelect('user.email', 'user_email')
+      .addSelect('user.role', 'user_role')
+      .addSelect('COUNT(tasks.id)', 'totalFinishedTasksCount')
+      .addSelect('SUM(tasks.hours)', 'totalFinishedTaskHours')
+      .groupBy('user.name');
+  
+    const users = await queryBuilder.getRawMany();
+  
+    if (users.length === 0) {
+      throw new NotFoundException('No users found.');
+    }
+  
+    return users;
   }
 }

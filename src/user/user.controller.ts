@@ -28,7 +28,7 @@ export class UserController {
     return this.userService.findByRequest(findUserDto);
   }
   
-  @Get('/numTask/:name')
+  /* @Get('/numTask/:name')
   findTasks(@Param('name') name: string){
     return this.userService.findTasks(name);
   }
@@ -36,7 +36,7 @@ export class UserController {
   @Get('/costTask/:name')
   findCost(@Param('name') name: string){
     return this.userService.findCost(name);
-  }
+  } */
 
   /* @Patch(':id')
   update(@Param('id') id: string, @Body() updateUserDto: UpdateUserDto) {
